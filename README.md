@@ -1,6 +1,6 @@
 ## 💻What's is it?
 
-Its an example about how to optimize a deployment for a node app just controlling when a `npm ci` must me done using a checksum & a volume.
+It's an example about how to optimize a deployment for a node app just controlling when a `npm ci` must be done using a checksum & a volume.
 
 This trick can be used to accelerate any application with a third package version system based on lock files.
 
@@ -37,18 +37,18 @@ Execute:
 
 You can test the previous explained flow altering the app in the following way:
 
-- It never rebuild the node_modules dir when:
+- It never re-build the node_modules directory when:
 
   - Deleting **node_modules** directory (not if first time), it will only refresh it copy & pasting from the named volume
   - Adding new files or removing it from node_modules directory, same as previously point
 
-- It will always rebuild the node_modules dir when:
+- It will always rebuild the node_modules directory when:
 
-  - If the volume is empty or the checksum directory does not exists
+  - If the volume is empty or the checksum directory does not exist
 
-  - A new change is detected on the package-lock.json (try adding, removing or updating packages)
+  - A new change is detected at the package-lock.json (try adding, removing or updating packages)
 
-    - `docker exec -it app npm install dotenv` (install a new package) note that in this case there is execution of the entrypoint.sh so you have to restart the container once to allow the app to cache de checksum directory
+    - `docker exec -it app npm install dotenv` (install a new package) note that in this case there is no execution of the entrypoint.sh so you have to restart the container once to allow the app to cache checksum's directory
 
   - The package-lock.json is deleted
 
