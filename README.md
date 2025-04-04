@@ -44,7 +44,7 @@ You can test the previous explained flow altering the app in the following way:
 
 - It will always rebuild the node_modules dir when:
 
-  - Deleting **node_modules**, if the volume is empty or the checksum directory does not exists
+  - If the volume is empty or the checksum directory does not exists
 
   - A new change is detected on the package-lock.json (try adding, removing or updating packages)
 
