@@ -6,7 +6,7 @@ ARG APP_USER_ID=1000
 ARG APP_GROUP_ID=1000
 
 RUN apk update && \
-    apk add --no-cache shadow && \
+    apk add --no-cache shadow rsync && \
     groupmod -g ${APP_GROUP_ID} node && \
     usermod -u ${APP_USER_ID} -g ${APP_GROUP_ID} node
 

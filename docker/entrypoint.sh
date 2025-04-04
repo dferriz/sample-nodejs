@@ -9,14 +9,13 @@ CHECKSUM_DIR="${CHECKSUM_DIRECTORY_PATH}/${CURRENT_CHECKSUM}"
 
 if [ -d "${NODE_MODULES_DIR}" ] && [ -d "${CHECKSUM_DIR}" ]; then
     echo "✅ It looks like you've already build node_modules"
-    rm -rf node_modules/*
-    cp -r ${CHECKSUM_DIR}/* node_modules
+    rsync -a --delete --quiet "${CHECKSUM_DIR}/" "${NODE_MODULES_DIR}/"
 else
     echo "🔄 Installing dependencies..."
     npm ci || npm install
     rm -rf ${CHECKSUM_DIR}
     mkdir -p "${CHECKSUM_DIR}"
-    cp -r  node_modules/* ${CHECKSUM_DIR}
+    rsync -a --delete --quiet "${NODE_MODULES_DIR}/" "${CHECKSUM_DIR}/"
     echo "🧹 Cleaning previously builds..."
     find "${CHECKSUM_DIRECTORY_PATH}" -mindepth 1 -maxdepth 1 -type d ! -name "${CURRENT_CHECKSUM}" -exec rm -rf {} +
 fi
