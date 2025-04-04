@@ -13,7 +13,6 @@ if [ -d "${NODE_MODULES_DIR}" ] && [ -d "${CHECKSUM_DIR}" ]; then
 else
     echo "🔄 Installing dependencies..."
     npm ci || npm install
-    rm -rf ${CHECKSUM_DIR}
     mkdir -p "${CHECKSUM_DIR}"
     rsync -a --delete --quiet "${NODE_MODULES_DIR}/" "${CHECKSUM_DIR}/"
     echo "🧹 Cleaning previously builds..."
