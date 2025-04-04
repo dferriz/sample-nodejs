@@ -1,38 +1,54 @@
-### What's is it?
+## 💻What's is it?
 
-Its an example of how to optimize a node app just avoiding not necessary node builts.
+Its an example about how to optimize a deployment for a node app just controlling when a `npm ci` must me done using a checksum & a volume.
+
+This trick can be used to accelerate any application with a third package version system based on lock files.
 
 
 
-### How it works?
+## ⚙️How it works?
 
-The trick is done using a volume and a checksum validation over the .lock file (this file tells us exactly which version is being used for each vendor package).
+Basically it works using a volume and a checksum validation over the .lock file (this file tells us exactly which version is being used for each vendor package), so if this file changes it means we have to rebuild our application
 
 In this scenario we just use a named volume attached to the container but it can be replicated in the same way for Cloud Services like EC2 instances and EBS volumes or similar.
 
 
 
-### Ok, I want to try
+## 🚀 Usage
 
 Just follow these steps:
 
-- Clone the repo and execute
-- `make -C docker build-dev`
-- `make -C docker bring-up`
-- At this point you will have the app running so if you execute `docker logs -f app` you will see something like:
-  ![img.png](img.png)
-- Now just stop containers with `make -C docker bring-down`
-- Finally start containers again with `make -C docker bring-up` and show logs `docker logs -f app` you will see something like:
-  ![img_1.png](img_1.png)
+1. Clone the repo and move to `docker/` dir
+2. `make build-dev`
 
-As you could see, the container ignored node_modules recreation.
+### Test it
 
+Execute:
 
+1. `make bring-up` to raise the app container
+2. `docker logs -f app`  and you will see something like:
+   ![img.png](img.png)
+3. `make bring-down && make bring-up` to restart the container
+4. `docker logs -f app` you will see something like:
+   ![img_1.png](img_1.png)
+5. As you can see, the app ignored to rebuild node packages because there is nothing to rebuild!
 
-You can also try deleting node_modules and repeating the steps above, the result will be the same.
+### More testing
 
-As a final step you can add a new node package like dotenv:
+You can test the previous explained flow altering the app in the following way:
 
-- `docker exec -it app npm install dotenv`
-- restart dockers and will show node_modules is rebuilt
-- restart dockers and will show node_modules is not rebuilt
+- It never rebuild the node_modules dir when:
+
+  - Deleting **node_modules** directory (not if first time), it will only refresh it copy & pasting from the named volume
+  - Adding new files or removing it from node_modules directory, same as previously point
+
+- It will always rebuild the node_modules dir when:
+
+  - Deleting **node_modules**, if the volume is empty or the checksum directory does not exists
+
+  - A new change is detected on the package-lock.json (try adding, removing or updating packages)
+
+    - `docker exec -it app npm install dotenv` (install a new package) note that in this case there is execution of the entrypoint.sh so you have to restart the container once to allow the app to cache de checksum directory
+
+  - The package-lock.json is deleted
+

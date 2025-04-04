@@ -2,10 +2,6 @@
 
 set -e
 
-if [ -f ".env.example" ]; then
-    cp -n .env.example .env
-fi
-
 NODE_MODULES_DIR="node_modules"
 PACKAGE_LOCK_FILE="package-lock.json"
 CURRENT_CHECKSUM=$(md5sum "${PACKAGE_LOCK_FILE}" | awk '{print $1}')

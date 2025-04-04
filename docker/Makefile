@@ -9,7 +9,7 @@ help: ## Display this help message
 
 
 .PHONY: build-dev
-build-dev: ## Builds test docker images
+build-dev: ## Builds dev images
 	@$(DOCKER_COMPOSE_DEV) build
 
 
