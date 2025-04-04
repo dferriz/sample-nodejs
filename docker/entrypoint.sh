@@ -7,7 +7,7 @@ PACKAGE_LOCK_FILE="package-lock.json"
 CURRENT_CHECKSUM=$(md5sum "${PACKAGE_LOCK_FILE}" | awk '{print $1}')
 CHECKSUM_DIR="${CHECKSUM_DIRECTORY_PATH}/${CURRENT_CHECKSUM}"
 
-if [ -d "${NODE_MODULES_DIR}" ] && [ -d "${CHECKSUM_DIR}" ]; then
+if [ -d "${CHECKSUM_DIR}" ]; then
     echo "✅ It looks like you've already build node_modules"
     rsync -a --delete --quiet "${CHECKSUM_DIR}/" "${NODE_MODULES_DIR}/"
 else
