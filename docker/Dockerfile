@@ -24,3 +24,17 @@ USER node
 
 CMD ["npm", "run", "start"]
 
+FROM base-image AS build-scalable
+
+COPY . /var/www
+RUN chown node:node -R /var/www
+
+COPY --chmod=0755 docker/entrypoint.sh /entrypoint.sh
+
+RUN mkdir -p ${CHECKSUM_DIRECTORY_PATH} && chown node:node -R ${CHECKSUM_DIRECTORY_PATH}
+
+USER node
+
+ENTRYPOINT ["/entrypoint.sh"]
+
+CMD ["npm", "run", "start"]

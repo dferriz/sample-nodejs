@@ -1,0 +1,44 @@
+services:
+  base_app:
+    image: dferriz/sample-nodejs:scalable
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+      args:
+        - APP_USER_ID=1000
+        - APP_GROUP_ID=1000
+      target: build-scalable
+    restart: always
+    volumes:
+      - app_node_builds:/opt/node_builds
+
+  warm_stage:
+    extends:
+      service: base_app
+    restart: on-failure
+    command: echo "Job finished!"
+
+  app_a:
+    extends:
+      service: base_app
+    depends_on:
+      warm_stage:
+        condition: service_completed_successfully
+    environment:
+      - FOO_ENVAR=foo_a
+    deploy:
+      replicas: 3
+
+  app_b:
+    extends:
+      service: base_app
+    depends_on:
+      warm_stage:
+        condition: service_completed_successfully
+    environment:
+      - FOO_ENVAR=foo_b
+    deploy:
+      replicas: 2
+
+volumes:
+  app_node_builds:

@@ -1,6 +1,6 @@
 services:
   app:
-    image: dferriz/sample-nodejs:dev
+    image: dferriz/sample-nodejs:app
     container_name: app
     build:
       context: .
